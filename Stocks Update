@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>The Smiley Face Army</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
@@ -66,26 +68,34 @@ button:hover {
     display: block;
 }
 
-
 /* STOCK MARKET */
 
 .market-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
-.balance {
+.balance-box {
     background: #181818;
     border: 2px solid #00ff88;
     padding: 15px;
     border-radius: 10px;
+}
+
+.balance {
     color: #00ff88;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
 }
 
+.status {
+    text-align: center;
+    color: #888;
+    margin: 15px 0;
+}
 
 .stock-card {
     background: #151515;
@@ -94,7 +104,6 @@ button:hover {
     margin: 20px 0;
     padding: 20px;
 }
-
 
 .stock-title {
     font-size: 23px;
@@ -106,19 +115,21 @@ button:hover {
     font-size: 15px;
 }
 
+.description {
+    color: #aaa;
+    margin-top: 5px;
+}
 
 .stock-price {
     font-size: 32px;
     font-weight: bold;
-    margin-top: 8px;
+    margin-top: 15px;
 }
-
 
 .stock-change {
     font-weight: bold;
-    margin-bottom: 10px;
+    margin: 5px 0 10px;
 }
-
 
 .up {
     color: #00ff88;
@@ -128,27 +139,31 @@ button:hover {
     color: #ff4d4d;
 }
 
-
 /* CHART */
 
-.chart {
+.chart-container {
     width: 100%;
-    height: 220px;
-    background: #0b0b0b;
+    height: 230px;
+    background: #090909;
     border-radius: 10px;
+    overflow: hidden;
     margin-top: 15px;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
     display: block;
 }
 
-
-/* NPC MARKET */
+/* NPC ACTIVITY */
 
 .npc-market {
-    margin-top: 15px;
-    padding: 12px;
     background: #101010;
     border-radius: 8px;
-    color: #aaa;
+    padding: 14px;
+    margin-top: 15px;
+    line-height: 1.8;
 }
 
 .buying {
@@ -159,6 +174,9 @@ button:hover {
     color: #ff4d4d;
 }
 
+.neutral {
+    color: #aaa;
+}
 
 .actions {
     margin-top: 15px;
@@ -168,194 +186,163 @@ button:hover {
     margin-right: 8px;
 }
 
-
-.status {
-    text-align: center;
-    color: #888;
-    margin: 15px;
+.shares {
+    color: #bbb;
 }
 
+/* OTHER PANELS */
+
+.info-box {
+    background: #181818;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 15px;
+}
 </style>
 </head>
 
-
 <body>
 
-
 <header>
-
-<div class="logo">&gt;:)</div>
-
-<h1>THE SMILEY FACE ARMY</h1>
-
-<p>Organization Command HQ</p>
-
+    <div class="logo">&gt;:)</div>
+    <h1>THE SMILEY FACE ARMY</h1>
+    <p>Organization Command HQ</p>
 </header>
 
-
 <div class="buttons">
-
-<button onclick="openPanel('team')">
-TEAM
-</button>
-
-<button onclick="openPanel('map')">
-MAP
-</button>
-
-<button onclick="openPanel('action')">
-ACTION
-</button>
-
-<button onclick="openPanel('stocks')">
-STOCKS
-</button>
-
-<button onclick="openPanel('command')">
-COMMAND CENTER
-</button>
-
+    <button onclick="openPanel('team')">TEAM</button>
+    <button onclick="openPanel('map')">MAP</button>
+    <button onclick="openPanel('action')">ACTION</button>
+    <button onclick="openPanel('stocks')">STOCKS</button>
+    <button onclick="openPanel('command')">COMMAND CENTER</button>
 </div>
-
 
 <!-- TEAM -->
 
 <div id="team" class="panel">
+    <h2>TEAM</h2>
 
-<h2>TEAM</h2>
-
-<p>Organization members, teams and ranks.</p>
-
+    <div class="info-box">
+        <p>Organization members, teams and ranks.</p>
+    </div>
 </div>
-
 
 <!-- MAP -->
 
 <div id="map" class="panel">
+    <h2>MAP</h2>
 
-<h2>MAP</h2>
-
-<p>World Map</p>
-
-<p>Underground Map</p>
-
+    <div class="info-box">
+        <p>🌎 World Map</p>
+        <p>🕳️ Underground Map</p>
+    </div>
 </div>
-
 
 <!-- ACTION -->
 
 <div id="action" class="panel">
+    <h2>ACTION</h2>
 
-<h2>ACTION</h2>
-
-<p>Fictional world simulation.</p>
-
+    <div class="info-box">
+        <p>Fictional world simulation.</p>
+        <p>More actions coming soon...</p>
+    </div>
 </div>
-
 
 <!-- STOCKS -->
 
 <div id="stocks" class="panel">
 
+    <div class="market-header">
+        <h2>📈 SFA STOCK EXCHANGE</h2>
 
-<div class="market-header">
+        <div class="balance-box">
+            💰 Smiley Dollars:
+            <div class="balance" id="balance">
+                $10,000.00
+            </div>
+        </div>
+    </div>
 
-<h2>📈 SFA STOCK EXCHANGE</h2>
+    <div class="status">
+        🔴 LIVE MARKET — NPC investors trade every second
+    </div>
 
-<div class="balance">
-
-💰 <span id="balance">$10,000.00</span>
-
-</div>
-
-</div>
-
-
-<div class="status">
-
-🔴 MARKET LIVE — NPC investors are trading every second
-
-</div>
-
-
-<div id="stock-list"></div>
-
+    <div id="stock-list"></div>
 
 </div>
 
-
-<!-- COMMAND -->
+<!-- COMMAND CENTER -->
 
 <div id="command" class="panel">
 
-<h2>COMMAND CENTER</h2>
+    <h2>COMMAND CENTER</h2>
 
-<p>Speak with the Commander.</p>
+    <div class="info-box">
+        <p>🫡 Commander communication system.</p>
+        <p>Promotion requests coming soon.</p>
+    </div>
 
 </div>
-
 
 
 <script>
 
-
-/* =========================
+/* ==========================================
    STOCK DATA
-========================= */
+========================================== */
 
 const stocks = {
 
-ADI: {
-    name: "AeroDyne Industries",
-    description: "Aircraft, aviation systems and flight gear",
-    price: 120
-},
+    ADI: {
+        name: "AeroDyne Industries",
+        description: "Aircraft, aviation systems and flight gear",
+        price: 120
+    },
 
-ICD: {
-    name: "Ironclad Dynamics",
-    description: "Armored vehicles and equipment",
-    price: 85
-},
+    ICD: {
+        name: "Ironclad Dynamics",
+        description: "Armored vehicles and equipment",
+        price: 85
+    },
 
-NEX: {
-    name: "Nexora Industries",
-    description: "Everyday products and consumer goods",
-    price: 64
-},
+    NEX: {
+        name: "Nexora Industries",
+        description: "Everyday products and consumer goods",
+        price: 64
+    },
 
-SFC: {
-    name: "Stellar Frontier Corp.",
-    description: "Spacecraft, satellites and space equipment",
-    price: 210
-}
+    SFC: {
+        name: "Stellar Frontier Corp.",
+        description: "Spacecraft, satellites and space equipment",
+        price: 210
+    }
 
 };
 
 
-/* =========================
+/* ==========================================
    PLAYER
-========================= */
+========================================== */
 
 let balance = 10000;
 
-let shares = {
-
-ADI: 0,
-ICD: 0,
-NEX: 0,
-SFC: 0
-
+const shares = {
+    ADI: 0,
+    ICD: 0,
+    NEX: 0,
+    SFC: 0
 };
 
 
-/* =========================
+/* ==========================================
    PRICE HISTORY
-========================= */
+========================================== */
 
-let history = {};
+const history = {};
 
-
-for (let ticker in stocks) {
+for (const ticker in stocks) {
 
     history[ticker] = [];
 
@@ -370,31 +357,27 @@ for (let ticker in stocks) {
 }
 
 
-/* =========================
-   NPC MARKET
-========================= */
+/* ==========================================
+   NPC MARKET DATA
+========================================== */
 
-let npcData = {};
+const npcData = {};
 
-
-for (let ticker in stocks) {
+for (const ticker in stocks) {
 
     npcData[ticker] = {
-
         buyers: 0,
-
         sellers: 0
-
     };
 
 }
 
 
-/* =========================
-   OPEN PANEL
-========================= */
+/* ==========================================
+   OPEN PANELS
+========================================== */
 
-function openPanel(name) {
+function openPanel(panelName) {
 
     document
         .querySelectorAll(".panel")
@@ -404,17 +387,19 @@ function openPanel(name) {
 
         });
 
+    const panel =
+        document.getElementById(panelName);
 
-    document
-        .getElementById(name)
-        .classList.add("active");
+    if (panel) {
+        panel.classList.add("active");
+    }
 
 }
 
 
-/* =========================
-   MONEY FORMAT
-========================= */
+/* ==========================================
+   MONEY
+========================================== */
 
 function money(value) {
 
@@ -429,20 +414,38 @@ function money(value) {
 }
 
 
-/* =========================
-   DRAW CHART
-========================= */
+/* ==========================================
+   DRAW STOCK CHART
+========================================== */
 
 function drawChart(canvas, prices) {
 
-    const ctx = canvas.getContext("2d");
+    const ctx =
+        canvas.getContext("2d");
 
-    const width = canvas.width =
-        canvas.clientWidth * window.devicePixelRatio;
+    const width =
+        canvas.clientWidth;
 
-    const height = canvas.height =
-        canvas.clientHeight * window.devicePixelRatio;
+    const height =
+        canvas.clientHeight;
 
+    const pixelRatio =
+        window.devicePixelRatio || 1;
+
+    canvas.width =
+        width * pixelRatio;
+
+    canvas.height =
+        height * pixelRatio;
+
+    ctx.setTransform(
+        pixelRatio,
+        0,
+        0,
+        pixelRatio,
+        0,
+        0
+    );
 
     ctx.clearRect(
         0,
@@ -452,20 +455,52 @@ function drawChart(canvas, prices) {
     );
 
 
-    if (prices.length < 2)
+    if (prices.length < 2) {
         return;
+    }
 
 
-    const min =
+    let min =
         Math.min(...prices);
 
-    const max =
+    let max =
         Math.max(...prices);
 
+    let range =
+        max - min;
 
-    const range =
-        max - min || 1;
 
+    if (range === 0) {
+        range = 1;
+    }
+
+
+    /*
+       Draw faint horizontal
+       reference lines.
+    */
+
+    ctx.strokeStyle = "#222";
+    ctx.lineWidth = 1;
+
+    for (let i = 1; i < 5; i++) {
+
+        const y =
+            (height / 5) * i;
+
+        ctx.beginPath();
+
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+
+        ctx.stroke();
+
+    }
+
+
+    /*
+       Draw stock line.
+    */
 
     ctx.beginPath();
 
@@ -475,7 +510,6 @@ function drawChart(canvas, prices) {
         const x =
             (index / (prices.length - 1))
             * width;
-
 
         const y =
             height -
@@ -497,20 +531,22 @@ function drawChart(canvas, prices) {
     });
 
 
-    const last =
-        prices[prices.length - 1];
-
     const first =
         prices[0];
+
+    const last =
+        prices[prices.length - 1];
 
 
     if (last >= first) {
 
-        ctx.strokeStyle = "#00ff88";
+        ctx.strokeStyle =
+            "#00ff88";
 
     } else {
 
-        ctx.strokeStyle = "#ff4d4d";
+        ctx.strokeStyle =
+            "#ff4d4d";
 
     }
 
@@ -522,9 +558,9 @@ function drawChart(canvas, prices) {
 }
 
 
-/* =========================
+/* ==========================================
    RENDER STOCKS
-========================= */
+========================================== */
 
 function renderStocks() {
 
@@ -535,23 +571,21 @@ function renderStocks() {
     container.innerHTML = "";
 
 
-    for (let ticker in stocks) {
+    for (const ticker in stocks) {
 
         const stock =
             stocks[ticker];
 
+        const currentPrice =
+            stock.price;
 
         const firstPrice =
             history[ticker][0];
 
 
-        const currentPrice =
-            stock.price;
-
-
         const percent =
             ((currentPrice - firstPrice)
-        / firstPrice) * 100;
+            / firstPrice) * 100;
 
 
         const direction =
@@ -566,6 +600,34 @@ function renderStocks() {
             : "down";
 
 
+        const buyers =
+            npcData[ticker].buyers;
+
+        const sellers =
+            npcData[ticker].sellers;
+
+
+        let marketPressure;
+
+
+        if (buyers > sellers) {
+
+            marketPressure =
+                '<span class="buying">BUYING PRESSURE 📈</span>';
+
+        } else if (sellers > buyers) {
+
+            marketPressure =
+                '<span class="selling">SELLING PRESSURE 📉</span>';
+
+        } else {
+
+            marketPressure =
+                '<span class="neutral">MARKET NEUTRAL</span>';
+
+        }
+
+
         const card =
             document.createElement("div");
 
@@ -577,90 +639,73 @@ function renderStocks() {
         card.innerHTML = `
 
             <div class="stock-title">
-
                 ${stock.name}
-
                 <span class="ticker">
                     (${ticker})
                 </span>
-
             </div>
 
-
-            <div>
-
+            <div class="description">
                 ${stock.description}
-
             </div>
-
 
             <div class="stock-price">
-
                 ${money(currentPrice)}
-
             </div>
-
 
             <div class="stock-change ${colorClass}">
-
                 ${direction}
                 ${Math.abs(percent).toFixed(2)}%
-
             </div>
 
-
-            <canvas class="chart"></canvas>
-
+            <div class="chart-container">
+                <canvas></canvas>
+            </div>
 
             <div class="npc-market">
 
-                👥 NPC MARKET ACTIVITY
+                👥 <b>NPC MARKET ACTIVITY</b>
 
-                <br><br>
-
-                <span class="buying">
+                <br>
 
                 🟢 Buyers:
-                ${npcData[ticker].buyers.toLocaleString()}
-
+                <span class="buying">
+                    ${buyers.toLocaleString()}
                 </span>
 
                 <br>
 
-                <span class="selling">
-
                 🔴 Sellers:
-                ${npcData[ticker].sellers.toLocaleString()}
-
+                <span class="selling">
+                    ${sellers.toLocaleString()}
                 </span>
 
-                <br><br>
+                <br>
 
-                👤 Your shares:
-                ${shares[ticker]}
+                ⚖️ Market:
+                ${marketPressure}
+
+                <br>
+
+                <span class="shares">
+                    👤 Your shares: ${shares[ticker]}
+                </span>
 
             </div>
-
 
             <div class="actions">
 
                 <button
                     onclick="buyStock('${ticker}')">
-
                     BUY 1
-
                 </button>
-
 
                 <button
                     onclick="sellStock('${ticker}')">
-
                     SELL 1
-
                 </button>
 
             </div>
-
         `;
 
 
@@ -685,57 +730,56 @@ function renderStocks() {
 }
 
 
-/* =========================
-   NPC TRADING
-========================= */
+/* ==========================================
+   NPC MARKET UPDATE
+========================================== */
 
 function updateMarket() {
 
-
-    for (let ticker in stocks) {
-
+    for (const ticker in stocks) {
 
         /*
-         Generate fictional NPC
-         buyers and sellers.
+           Simulated world population.
+
+           These are fictional NPC investors.
         */
 
         const buyers =
             Math.floor(
-                Math.random() * 1000000
+                400000 +
+                Math.random() * 600000
             );
 
 
         const sellers =
             Math.floor(
-                Math.random() * 1000000
+                400000 +
+                Math.random() * 600000
             );
 
 
         npcData[ticker].buyers =
             buyers;
 
-
         npcData[ticker].sellers =
             sellers;
 
 
         /*
-         Difference between buyers
-         and sellers controls price.
+           Calculate buying/selling pressure.
         */
 
-        const pressure =
-            (buyers - sellers)
-            / 1000000;
+        const difference =
+            buyers - sellers;
 
 
         /*
-         Small movement every second.
+           Convert NPC activity into
+           a small price movement.
         */
 
         const movement =
-            pressure * 0.015;
+            difference / 100000000;
 
 
         stocks[ticker].price +=
@@ -744,7 +788,8 @@ function updateMarket() {
 
 
         /*
-         Prevent absurdly low prices.
+           Don't allow a stock to
+           fall below $1.
         */
 
         if (stocks[ticker].price < 1) {
@@ -755,7 +800,7 @@ function updateMarket() {
 
 
         /*
-         Add new price to chart.
+           Save new price to chart.
         */
 
         history[ticker].push(
@@ -764,7 +809,7 @@ function updateMarket() {
 
 
         /*
-         Keep the graph scrolling.
+           Keep the latest 60 seconds.
         */
 
         if (history[ticker].length > 60) {
@@ -781,9 +826,9 @@ function updateMarket() {
 }
 
 
-/* =========================
-   BUY
-========================= */
+/* ==========================================
+   BUY STOCK
+========================================== */
 
 function buyStock(ticker) {
 
@@ -794,7 +839,7 @@ function buyStock(ticker) {
     if (balance < price) {
 
         alert(
-            "You don't have enough Smiley Dollars!"
+            "Not enough Smiley Dollars!"
         );
 
         return;
@@ -808,11 +853,23 @@ function buyStock(ticker) {
 
 
     /*
-    Player buying adds a tiny amount
-    of demand.
+       Your purchase creates
+       a tiny amount of demand.
     */
 
     stocks[ticker].price *= 1.0005;
+
+
+    history[ticker].push(
+        stocks[ticker].price
+    );
+
+
+    if (history[ticker].length > 60) {
+
+        history[ticker].shift();
+
+    }
 
 
     renderStocks();
@@ -820,9 +877,9 @@ function buyStock(ticker) {
 }
 
 
-/* =========================
-   SELL
-========================= */
+/* ==========================================
+   SELL STOCK
+========================================== */
 
 function sellStock(ticker) {
 
@@ -847,11 +904,23 @@ function sellStock(ticker) {
 
 
     /*
-    Player selling adds a tiny amount
-    of selling pressure.
+       Your sale creates
+       a tiny amount of selling pressure.
     */
 
     stocks[ticker].price *= 0.9995;
+
+
+    history[ticker].push(
+        stocks[ticker].price
+    );
+
+
+    if (history[ticker].length > 60) {
+
+        history[ticker].shift();
+
+    }
 
 
     renderStocks();
@@ -859,16 +928,11 @@ function sellStock(ticker) {
 }
 
 
-/* =========================
-   START
-========================= */
+/* ==========================================
+   START MARKET
+========================================== */
 
 renderStocks();
-
-
-/*
-   Market updates every second.
-*/
 
 setInterval(
     updateMarket,
@@ -876,33 +940,13 @@ setInterval(
 );
 
 
-/*
-   Open stocks automatically.
-*/
+/* ==========================================
+   OPEN STOCK MARKET
+========================================== */
 
 openPanel("stocks");
 
-
 </script>
-
-</body>
-</html>
-
-            document.getElementById(panelName).style.display = "block";
-
-            document.getElementById(panelName).scrollIntoView({
-                behavior: "smooth"
-            });
-        }
-
-        function closePanels() {
-            const panels = document.querySelectorAll(".panel");
-
-            panels.forEach(function(panel) {
-                panel.style.display = "none";
-            });
-        }
-    </script>
 
 </body>
 </html>
