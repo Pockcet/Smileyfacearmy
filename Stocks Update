@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Smiley Face Army</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: white;
+}
+
+header {
+    background: #181818;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px solid #00ff88;
+}
+
+.logo {
+    font-size: 50px;
+    font-weight: bold;
+    color: #00ff88;
+}
+
+header h1 {
+    margin: 5px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+button {
+    background: #181818;
+    color: white;
+    border: 2px solid #00ff88;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #00ff88;
+    color: black;
+}
+
+.panel {
+    display: none;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.panel.active {
+    display: block;
+}
+
+
+/* STOCK MARKET */
+
+.market-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.balance {
+    background: #181818;
+    border: 2px solid #00ff88;
+    padding: 15px;
+    border-radius: 10px;
+    color: #00ff88;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.stock-card {
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 14px;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+
+.stock-title {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.ticker {
+    color: #888;
+    font-size: 15px;
+}
+
+
+.stock-price {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+
+.stock-change {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.up {
+    color: #00ff88;
+}
+
+.down {
+    color: #ff4d4d;
+}
+
+
+/* CHART */
+
+.chart {
+    width: 100%;
+    height: 220px;
+    background: #0b0b0b;
+    border-radius: 10px;
+    margin-top: 15px;
+    display: block;
+}
+
+
+/* NPC MARKET */
+
+.npc-market {
+    margin-top: 15px;
+    padding: 12px;
+    background: #101010;
+    border-radius: 8px;
+    color: #aaa;
+}
+
+.buying {
+    color: #00ff88;
+}
+
+.selling {
+    color: #ff4d4d;
+}
+
+
+.actions {
+    margin-top: 15px;
+}
+
+.actions button {
+    margin-right: 8px;
+}
+
+
+.status {
+    text-align: center;
+    color: #888;
+    margin: 15px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="logo">&gt;:)</div>
+
+<h1>THE SMILEY FACE ARMY</h1>
+
+<p>Organization Command HQ</p>
+
+</header>
+
+
+<div class="buttons">
+
+<button onclick="openPanel('team')">
+TEAM
+</button>
+
+<button onclick="openPanel('map')">
+MAP
+</button>
+
+<button onclick="openPanel('action')">
+ACTION
+</button>
+
+<button onclick="openPanel('stocks')">
+STOCKS
+</button>
+
+<button onclick="openPanel('command')">
+COMMAND CENTER
+</button>
+
+</div>
+
+
+<!-- TEAM -->
+
+<div id="team" class="panel">
+
+<h2>TEAM</h2>
+
+<p>Organization members, teams and ranks.</p>
+
+</div>
+
+
+<!-- MAP -->
+
+<div id="map" class="panel">
+
+<h2>MAP</h2>
+
+<p>World Map</p>
+
+<p>Underground Map</p>
+
+</div>
+
+
+<!-- ACTION -->
+
+<div id="action" class="panel">
+
+<h2>ACTION</h2>
+
+<p>Fictional world simulation.</p>
+
+</div>
+
+
+<!-- STOCKS -->
+
+<div id="stocks" class="panel">
+
+
+<div class="market-header">
+
+<h2>📈 SFA STOCK EXCHANGE</h2>
+
+<div class="balance">
+
+💰 <span id="balance">$10,000.00</span>
+
+</div>
+
+</div>
+
+
+<div class="status">
+
+🔴 MARKET LIVE — NPC investors are trading every second
+
+</div>
+
+
+<div id="stock-list"></div>
+
+
+</div>
+
+
+<!-- COMMAND -->
+
+<div id="command" class="panel">
+
+<h2>COMMAND CENTER</h2>
+
+<p>Speak with the Commander.</p>
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   STOCK DATA
+========================= */
+
+const stocks = {
+
+ADI: {
+    name: "AeroDyne Industries",
+    description: "Aircraft, aviation systems and flight gear",
+    price: 120
+},
+
+ICD: {
+    name: "Ironclad Dynamics",
+    description: "Armored vehicles and equipment",
+    price: 85
+},
+
+NEX: {
+    name: "Nexora Industries",
+    description: "Everyday products and consumer goods",
+    price: 64
+},
+
+SFC: {
+    name: "Stellar Frontier Corp.",
+    description: "Spacecraft, satellites and space equipment",
+    price: 210
+}
+
+};
+
+
+/* =========================
+   PLAYER
+========================= */
+
+let balance = 10000;
+
+let shares = {
+
+ADI: 0,
+ICD: 0,
+NEX: 0,
+SFC: 0
+
+};
+
+
+/* =========================
+   PRICE HISTORY
+========================= */
+
+let history = {};
+
+
+for (let ticker in stocks) {
+
+    history[ticker] = [];
+
+    for (let i = 0; i < 60; i++) {
+
+        history[ticker].push(
+            stocks[ticker].price
+        );
+
+    }
+
+}
+
+
+/* =========================
+   NPC MARKET
+========================= */
+
+let npcData = {};
+
+
+for (let ticker in stocks) {
+
+    npcData[ticker] = {
+
+        buyers: 0,
+
+        sellers: 0
+
+    };
+
+}
+
+
+/* =========================
+   OPEN PANEL
+========================= */
+
+function openPanel(name) {
+
+    document
+        .querySelectorAll(".panel")
+        .forEach(panel => {
+
+            panel.classList.remove("active");
+
+        });
+
+
+    document
+        .getElementById(name)
+        .classList.add("active");
+
+}
+
+
+/* =========================
+   MONEY FORMAT
+========================= */
+
+function money(value) {
+
+    return "$" + value.toLocaleString(
+        "en-US",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+}
+
+
+/* =========================
+   DRAW CHART
+========================= */
+
+function drawChart(canvas, prices) {
+
+    const ctx = canvas.getContext("2d");
+
+    const width = canvas.width =
+        canvas.clientWidth * window.devicePixelRatio;
+
+    const height = canvas.height =
+        canvas.clientHeight * window.devicePixelRatio;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    if (prices.length < 2)
+        return;
+
+
+    const min =
+        Math.min(...prices);
+
+    const max =
+        Math.max(...prices);
+
+
+    const range =
+        max - min || 1;
+
+
+    ctx.beginPath();
+
+
+    prices.forEach((price, index) => {
+
+        const x =
+            (index / (prices.length - 1))
+            * width;
+
+
+        const y =
+            height -
+            ((price - min) / range)
+            * (height - 20)
+            - 10;
+
+
+        if (index === 0) {
+
+            ctx.moveTo(x, y);
+
+        } else {
+
+            ctx.lineTo(x, y);
+
+        }
+
+    });
+
+
+    const last =
+        prices[prices.length - 1];
+
+    const first =
+        prices[0];
+
+
+    if (last >= first) {
+
+        ctx.strokeStyle = "#00ff88";
+
+    } else {
+
+        ctx.strokeStyle = "#ff4d4d";
+
+    }
+
+
+    ctx.lineWidth = 3;
+
+    ctx.stroke();
+
+}
+
+
+/* =========================
+   RENDER STOCKS
+========================= */
+
+function renderStocks() {
+
+    const container =
+        document.getElementById("stock-list");
+
+
+    container.innerHTML = "";
+
+
+    for (let ticker in stocks) {
+
+        const stock =
+            stocks[ticker];
+
+
+        const firstPrice =
+            history[ticker][0];
+
+
+        const currentPrice =
+            stock.price;
+
+
+        const percent =
+            ((currentPrice - firstPrice)
+        / firstPrice) * 100;
+
+
+        const direction =
+            percent >= 0
+            ? "▲"
+            : "▼";
+
+
+        const colorClass =
+            percent >= 0
+            ? "up"
+            : "down";
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "stock-card";
+
+
+        card.innerHTML = `
+
+            <div class="stock-title">
+
+                ${stock.name}
+
+                <span class="ticker">
+                    (${ticker})
+                </span>
+
+            </div>
+
+
+            <div>
+
+                ${stock.description}
+
+            </div>
+
+
+            <div class="stock-price">
+
+                ${money(currentPrice)}
+
+            </div>
+
+
+            <div class="stock-change ${colorClass}">
+
+                ${direction}
+                ${Math.abs(percent).toFixed(2)}%
+
+            </div>
+
+
+            <canvas class="chart"></canvas>
+
+
+            <div class="npc-market">
+
+                👥 NPC MARKET ACTIVITY
+
+                <br><br>
+
+                <span class="buying">
+
+                🟢 Buyers:
+                ${npcData[ticker].buyers.toLocaleString()}
+
+                </span>
+
+                <br>
+
+                <span class="selling">
+
+                🔴 Sellers:
+                ${npcData[ticker].sellers.toLocaleString()}
+
+                </span>
+
+                <br><br>
+
+                👤 Your shares:
+                ${shares[ticker]}
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    onclick="buyStock('${ticker}')">
+
+                    BUY 1
+
+                </button>
+
+
+                <button
+                    onclick="sellStock('${ticker}')">
+
+                    SELL 1
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+
+        const canvas =
+            card.querySelector("canvas");
+
+
+        drawChart(
+            canvas,
+            history[ticker]
+        );
+
+    }
+
+
+    document.getElementById("balance")
+        .textContent = money(balance);
+
+}
+
+
+/* =========================
+   NPC TRADING
+========================= */
+
+function updateMarket() {
+
+
+    for (let ticker in stocks) {
+
+
+        /*
+         Generate fictional NPC
+         buyers and sellers.
+        */
+
+        const buyers =
+            Math.floor(
+                Math.random() * 1000000
+            );
+
+
+        const sellers =
+            Math.floor(
+                Math.random() * 1000000
+            );
+
+
+        npcData[ticker].buyers =
+            buyers;
+
+
+        npcData[ticker].sellers =
+            sellers;
+
+
+        /*
+         Difference between buyers
+         and sellers controls price.
+        */
+
+        const pressure =
+            (buyers - sellers)
+            / 1000000;
+
+
+        /*
+         Small movement every second.
+        */
+
+        const movement =
+            pressure * 0.015;
+
+
+        stocks[ticker].price +=
+            stocks[ticker].price
+            * movement;
+
+
+        /*
+         Prevent absurdly low prices.
+        */
+
+        if (stocks[ticker].price < 1) {
+
+            stocks[ticker].price = 1;
+
+        }
+
+
+        /*
+         Add new price to chart.
+        */
+
+        history[ticker].push(
+            stocks[ticker].price
+        );
+
+
+        /*
+         Keep the graph scrolling.
+        */
+
+        if (history[ticker].length > 60) {
+
+            history[ticker].shift();
+
+        }
+
+    }
+
+
+    renderStocks();
+
+}
+
+
+/* =========================
+   BUY
+========================= */
+
+function buyStock(ticker) {
+
+    const price =
+        stocks[ticker].price;
+
+
+    if (balance < price) {
+
+        alert(
+            "You don't have enough Smiley Dollars!"
+        );
+
+        return;
+
+    }
+
+
+    balance -= price;
+
+    shares[ticker]++;
+
+
+    /*
+    Player buying adds a tiny amount
+    of demand.
+    */
+
+    stocks[ticker].price *= 1.0005;
+
+
+    renderStocks();
+
+}
+
+
+/* =========================
+   SELL
+========================= */
+
+function sellStock(ticker) {
+
+    if (shares[ticker] <= 0) {
+
+        alert(
+            "You don't own this stock!"
+        );
+
+        return;
+
+    }
+
+
+    const price =
+        stocks[ticker].price;
+
+
+    balance += price;
+
+    shares[ticker]--;
+
+
+    /*
+    Player selling adds a tiny amount
+    of selling pressure.
+    */
+
+    stocks[ticker].price *= 0.9995;
+
+
+    renderStocks();
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+renderStocks();
+
+
+/*
+   Market updates every second.
+*/
+
+setInterval(
+    updateMarket,
+    1000
+);
+
+
+/*
+   Open stocks automatically.
+*/
+
+openPanel("stocks");
+
+
+</script>
+
+</body>
+</html>
+
+            document.getElementById(panelName).style.display = "block";
+
+            document.getElementById(panelName).scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+
+        function closePanels() {
+            const panels = document.querySelectorAll(".panel");
+
+            panels.forEach(function(panel) {
+                panel.style.display = "none";
+            });
+        }
+    </script>
+
+</body>
+</html>
